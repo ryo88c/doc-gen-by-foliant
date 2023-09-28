@@ -50,3 +50,32 @@ docker-compose run --rm foliant make --log ./logs docx
 ├── logs                Foliantが出力するログ
 └── src                 資料の元ファイル群
 ```
+
+# 注意点
+
+FoliantではPlantUMLやGraphvizの記述を `<plantuml/>` や `<graphviz/>` で括る形式になっていますが、これだと例えばVSCodeのMarkdown Preview Enhancedで意図したとおりにプレビューすることができません。
+この場合、コマンドパレットから `Markdown Preview Enhanced: Extend Parser` を開いて `onWillParseMarkdown()` に以下を追加することで正しくプレビューすることができます。
+
+```javascript
+onWillParseMarkdown: async function(markdown) {
+    return new Promise((resolve, reject) => {
+        markdown = markdown.replace(
+            /\<graphviz[^>]*\>([\w\W]+?)\<\/graphviz\>/g,
+            (whole, content) => `
+                \`\`\`dot
+                ${content}
+                \`\`\`
+            `,
+        );
+        markdown = markdown.replace(
+            /\<plantuml[^>]*\>([\w\W]+?)\<\/plantuml\>/g,
+            (whole, content) => `
+                \`\`\`plantuml
+                ${content}
+                \`\`\`
+            `,
+        );
+        return resolve(markdown)
+    })
+}
+```
