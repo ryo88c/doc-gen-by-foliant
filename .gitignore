@@ -1,0 +1,9 @@
+*.docx
+*.core
+core
+.diagramscache
+.mdtopdfcache
+.pandoccache
+.slate
+logs/*.log
+dist.mkdocs

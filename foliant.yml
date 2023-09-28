@@ -1,0 +1,22 @@
+title: &title Example document
+version: &version !version
+    - 1
+    - !commit_count
+src_dir: ./src
+backend_config:
+    docx:
+        slug: !slug
+            - *title
+            - *version
+            - !date
+chapters:
+    - example.md
+preprocessors:
+    - plantuml:
+        format: svg
+        parse_raw: true
+    - graphviz:
+        format: svg
+        as_image: false
+        params:
+            Gdpi: 0
